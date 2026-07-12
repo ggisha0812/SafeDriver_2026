@@ -26,3 +26,4 @@ Credenciales de Prueba (JWT)
 Para probar los endpoints protegidos o iniciar sesión en la App móvil:
 * **Usuario:** `admin`
 * **Contraseña:** `safedriver123`
+Actualizar README
