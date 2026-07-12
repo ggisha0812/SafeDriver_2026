@@ -1,10 +1,10 @@
-# SafeDriver - Ecosistema Digital (2026)
+# SafeDriver - Ecosistema Digital
 
-# Sistema Inteligente de Prevención de Fatiga y Seguridad Vial
+## Sistema Inteligente de Prevención de Fatiga y Seguridad Vial
 
-SafeDriver es un sistema inteligente desarrollado para prevenir accidentes ocasionados por fatiga o microsueños en conductores. El proyecto integra un backend desarrollado con FastAPI, una aplicación móvil en Flutter, un módulo de simulación IoT y una simulación gráfica en Godot 2D que representa el estado de los conductores en tiempo real.
+SafeDriver es un sistema desarrollado para la prevención de accidentes ocasionados por fatiga o microsueños en conductores. El proyecto integra un backend desarrollado con FastAPI, una aplicación móvil en Flutter, un módulo IoT basado en MQTT y una simulación desarrollada en Godot 2D.
 
-Este proyecto fue desarrollado para el curso de **Desarrollo Basado en Plataformas**.
+Proyecto desarrollado para el curso de Desarrollo Basado en Plataformas.
 
 ---
 
@@ -17,46 +17,31 @@ Este proyecto fue desarrollado para el curso de **Desarrollo Basado en Plataform
 
 ---
 
-# Arquitectura del Proyecto
+# Arquitectura del proyecto
 
-El ecosistema está dividido en cuatro módulos principales:
+El ecosistema está compuesto por los siguientes módulos:
 
 ## Backend
-API REST desarrollada con **Python**, **FastAPI**, **SQLAlchemy** y autenticación mediante **JWT**.
 
-Funciones principales:
-- Gestión de conductores.
-- Gestión de vehículos.
-- Registro de telemetría.
-- Detección de alertas de fatiga.
-- Documentación mediante Swagger.
+API REST desarrollada con FastAPI que administra conductores, vehículos, telemetría y alertas mediante autenticación JWT.
 
 ## Mobile
-Aplicación desarrollada con **Flutter** que permite:
 
-- Iniciar sesión.
-- Visualizar conductores.
-- Consultar vehículos.
-- Supervisar alertas.
-- Monitorear información del sistema.
+Aplicación desarrollada en Flutter para visualizar la información enviada por el backend.
 
 ## IoT Industrial
-Módulo encargado de simular el envío de información proveniente de sensores como:
 
-- Frecuencia cardíaca.
-- Parpadeos.
-- Velocidad.
-- Estado del conductor.
+Módulo encargado de simular el envío de datos mediante MQTT.
 
-## Simulación Godot 2D
-Simulación desarrollada en **Godot Engine** que representa visualmente el estado de varios conductores.
+Los principales archivos son:
 
-La simulación muestra:
+- `driver_sim.py`: simula el comportamiento del conductor y genera datos de telemetría.
+- `mqtt_sender.py`: publica la información simulada al broker MQTT.
+- `mqtt_bridge.py`: recibe los mensajes MQTT y los envía al backend mediante solicitudes HTTP.
 
-- Vehículos en movimiento.
-- Alertas visuales.
-- Alertas sonoras.
-- Estados Normal, Advertencia y Crítico.
+## Simulación
+
+Interfaz desarrollada en Godot 2D que representa el estado de los vehículos mediante alertas visuales y sonoras.
 
 ---
 
@@ -64,109 +49,82 @@ La simulación muestra:
 
 - Python
 - FastAPI
-- SQLAlchemy
-- SQLite
-- JWT
 - Flutter
-- Dart
 - Godot 4
+- MQTT
+- Docker
+- SQLite
+- SQLAlchemy
+- JWT
 - Git
-- GitHub
 
 ---
 
 # Requisitos
 
-Antes de ejecutar el proyecto es necesario tener instalado:
+Para ejecutar el proyecto es necesario tener instalado:
 
-- Python 3.10 o superior
-- Flutter SDK
-- Godot Engine 4
 - Git
+- Docker Desktop
+- Docker Compose
+
+Si se desea modificar el proyecto también se recomienda instalar Python, Flutter SDK y Godot Engine.
 
 ---
 
-# ▶️ Ejecución del Backend
-
-## 1. Ingresar a la carpeta backend
+# Clonar el repositorio
 
 ```bash
-cd backend
+git clone https://github.com/brunojuarez522-gif/Safedriver_final.git
 ```
 
-## 2. Crear un entorno virtual (solo la primera vez)
-
-### Windows
+Ingresar a la carpeta del proyecto:
 
 ```bash
-python -m venv venv
+cd Safedriver_final
 ```
 
-### Linux
+---
+
+# Ejecución del proyecto mediante Docker
+
+Desde la carpeta principal ejecutar:
 
 ```bash
-python3 -m venv venv
+docker compose up --build
 ```
 
-## 3. Activar el entorno virtual
+Este comando construye e inicia automáticamente los siguientes servicios:
 
-### Windows
+- Backend
+- MQTT Bridge
+- MQTT Sender
 
-```bash
-venv\Scripts\activate
-```
+Durante la construcción de los contenedores, Docker instala automáticamente las dependencias definidas en `requirements.txt` del backend y `requisitos.txt` del módulo IoT.
 
-### Linux
+---
 
-```bash
-source venv/bin/activate
-```
+# Acceso al Backend
 
-## 4. Instalar las dependencias
-
-```bash
-pip install fastapi uvicorn[standard] sqlalchemy python-multipart "python-jose[cryptography]" "passlib[bcrypt]"
-```
-
-## 5. Ejecutar el servidor
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-Una vez iniciado correctamente, abrir el navegador en:
+Una vez iniciado Docker, la documentación de la API estará disponible en:
 
 ```
 http://localhost:8000/docs
 ```
 
-para acceder a la documentación Swagger.
-
 ---
 
-# 📱 Ejecución de la aplicación Flutter
+# Aplicación Flutter
 
-Abrir una nueva terminal.
-
-Ingresar a la carpeta:
+Para ejecutar la aplicación:
 
 ```bash
 cd mobile
-```
-
-Descargar dependencias:
-
-```bash
 flutter pub get
-```
-
-Ejecutar la aplicación:
-
-```bash
 flutter run
 ```
 
-o en Google Chrome:
+También puede ejecutarse en Google Chrome:
 
 ```bash
 flutter run -d chrome
@@ -174,104 +132,44 @@ flutter run -d chrome
 
 ---
 
-# 🎮 Ejecución de la simulación en Godot
+# Simulación en Godot
 
 1. Abrir Godot Engine.
-2. Seleccionar **Import**.
-3. Buscar el archivo:
+2. Importar el proyecto ubicado en:
 
 ```
 simulation/project.godot
 ```
 
-4. Importar el proyecto.
-5. Ejecutar la escena principal.
+3. Ejecutar la escena principal.
 
-> **Importante:** Antes de iniciar la simulación, el backend debe estar ejecutándose para que las alertas puedan actualizarse correctamente.
-
----
-
-# 🔐 Credenciales de prueba
-
-Usuario: admin
-
-Contraseña: safedriver123
-
+Antes de iniciar la simulación, verificar que el backend esté ejecutándose mediante Docker.
 
 ---
 
-# 🚨 Estados de alerta
+# Credenciales de prueba
 
-La simulación presenta tres estados:
+Usuario:
 
-🟢 **Normal**
+```
+admin
+```
 
-- El conductor se encuentra en condiciones normales.
-- El vehículo mantiene su velocidad.
+Contraseña:
 
-🟠 **Advertencia**
-
-- Se detectan señales de fatiga.
-- Se muestra una alerta visual.
-- El vehículo reduce ligeramente su velocidad.
-
-🔴 **Crítico**
-
-- Se detecta un posible microsueño.
-- Se activa una alarma sonora.
-- El vehículo reduce considerablemente su velocidad.
+```
+safedriver123
+```
 
 ---
 
-# 📂 Estructura del proyecto
+# Estructura del proyecto
 
 ```
 backend/
 mobile/
 iot_industrial/
 simulation/
-README.md
 docker-compose.yml
+README.md
 ```
-
----
-
-# ⚠️ Problemas comunes
-
-### El backend no inicia
-
-Verificar que el entorno virtual esté activado e instalar nuevamente las dependencias.
-
-### Flutter no ejecuta
-
-Ejecutar:
-
-```bash
-flutter pub get
-```
-
-antes de utilizar:
-
-```bash
-flutter run
-```
-
-### Godot no muestra información
-
-Verificar que el backend esté ejecutándose correctamente en:
-
-```
-http://localhost:8000
-```
-
----
-
-# Observaciones
-
-Para un funcionamiento correcto del sistema se recomienda iniciar los módulos en el siguiente orden:
-
-1. Backend.
-2. Aplicación Flutter.
-3. Simulación Godot.
-
-De esta manera, la simulación podrá consultar correctamente la información generada por la API y mostrar las alertas en tiempo real.
